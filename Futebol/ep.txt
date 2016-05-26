@@ -1,0 +1,3 @@
+http://teytaud.over-blog.com/article-35709049.html
+http://stackoverflow.com/questions/23803186/monte-carlo-tree-search-implementation-for-tic-tac-toe?rq=1
+http://scalab.uc3m.es/~seminarios/seminar11/slides/lucas2.pdf
