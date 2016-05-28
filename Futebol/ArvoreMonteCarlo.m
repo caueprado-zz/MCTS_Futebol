@@ -4,20 +4,25 @@ classdef ArvoreMonteCarlo < handle
         S
         estados
         reward
-        valorNo
         acaoEstado
-        visitas
-		no
 		filhos
         acoes
         melhorNo
     end
     methods
         function MC = ArvoreMonteCarlo(S,M)
-        MC.estados = S.fatora();%estado atual
+
+        MC.estados{end+1} = [{S.fatora()} {[]} {0} {0}];%estado atual
         MC.filhos = 0;%indica quantidade de nós filhos
         MC.M = M;%inicializa o problema utilizado nas funcoes
         MC.S = S;
+        
+%         for i=0:1000
+            %Selecao - possiveis acoes a partir do estado S
+            no=MC.selecao(S);
+
+%             value = MC.rollout(no);
+%         end
 %        MC.acoes = selecao(agente,MC.estados);
 %
 %      if size(acoes) > size(MC.filhos)
@@ -30,8 +35,34 @@ classdef ArvoreMonteCarlo < handle
 %
         end
         
+        function no = selecao(MC,S)
+            aNew = [];
+            aOld = aNew;
+            sNewA = 0;
+            sNewB = 0;
+            sOldA = sNewA;
+            sOldB = sNewB;
+        
+            sNewA = S.fatora();
+            sNewB = S.fatoraB();
+
+            
+            actions = MC.movimentos(S);
+            MC.S.move([MC.M.Ta randi(size(actions))]);
+            
+            aNew(MC.M.Ta+1:end) = EscolheAcaoB(MC.M.Tb,agenteB,sOldB,aOld(MC.M.Ta+1:end),MC.reward,sNewB,notFirst,horizon);
+            
+            estados(end+1) = [{S.fatora()} {actions} {0} {0}];
+            %expansao - verifica o estado atual e quantidade de filhos
+            if(size(actions)>MC.filhos)
+                no=MC.expande(S,actions);
+            else
+                no=UCT(S,1.4);
+            end
+        end
+        
         %Calculo UCB para verificar melhor para expandir        
-        function valor = UCB(MC,S)
+        function valor = UCT(MC,S,gamma)
         valor = 0;
 %         for (Node child in current.children)
               %Calculo do melhor nó
@@ -45,7 +76,7 @@ classdef ArvoreMonteCarlo < handle
 
         end
         
-        function actions = selecao(MC,S)
+        function actions = movimentos(MC,S)
             %B.x, B.y, B_direct+1, B_speed+1, P{1}.x, P{1}.y, P{2}.x, P{2}.y
             actions=[];
             % verificar se a bola esta com jogador
@@ -108,16 +139,18 @@ classdef ArvoreMonteCarlo < handle
                 actions(end+1) = 1; 
             end
             end
+            
         end
 
-%recebe o no para expansão verifica qual o melhor nõ para expandir
+%   recebe o no para expansão verifica qual o melhor nõ para expandir
     function no = expande(MC,actions)
     no = MC.estados;
+    
     for i=1:size(actions)
         acao = actions(i);
         bestMove = acao;
     end
-    MC.S.move([MC.M.Ta bestMove]);
+    
 %    MC.estados(end+1) = MC.S.fatora();
     end
 

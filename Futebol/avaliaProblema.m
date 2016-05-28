@@ -62,19 +62,7 @@ function action = EscolheAcaoA(nPlayer,agente,sOld,aOld,reward,sNew,notFirst,hor
     action = zeros(0,nPlayer);
     %Construtor arvore passa o estado atual e o problema
     MC = ArvoreMonteCarlo(S,agente.M);
-    
-    for i=0:1000
-        %Selecao - possiveis acoes a partir do estado S
-        actions = MC.selecao(S);
-        %expansao - verifica o estado atual e quantidade de filhos
-        if(size(actions)>MC.filhos)
-            no=MC.expande(actions);
-        %else
-        %    no=UCB();
-        end
-        value = MC.rollout(no);
-    end
-    
+
     for i=1:nPlayer
         action(i) = aOrder(agente.action(S,i+agente.M.Ta));
     end
