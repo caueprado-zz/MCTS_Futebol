@@ -49,7 +49,9 @@ classdef ArvoreMonteCarlo < handle
             
             actions = MC.movimentos(S);
             MC.S.move([MC.M.Ta randi(size(actions))]);
-            
+            agenteB =  agenteRegra(0.05,MC.M);
+            notFirst = false;
+            horizon = MC.M.horizon;
             aNew(MC.M.Ta+1:end) = EscolheAcaoB(MC.M.Tb,agenteB,sOldB,aOld(MC.M.Ta+1:end),MC.reward,sNewB,notFirst,horizon);
             
             estados(end+1) = [{S.fatora()} {actions} {0} {0}];
